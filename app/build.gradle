@@ -34,5 +34,6 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxandroid:2.0.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
 }

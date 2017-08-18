@@ -33,7 +33,7 @@ public class RetrofitHelper {
             .build();
 
     public static <T> T createApi(Class<T> clazz) {
-        return createApi(clazz, "http\\://192.168.188.35\\:8088/");
+        return createApi(clazz, "http://192.168.188.35:8088/");
     }
 
     public static <T> T createApi(Class<T> clazz, String url) {
