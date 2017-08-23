@@ -4,7 +4,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;
-import test.quzubuluo.com.app.model.PicModel;
+import test.quzubuluo.com.app.model.PicResponse;
 import test.quzubuluo.com.app.net.RetrofitHelper;
 
 /**
@@ -28,7 +28,7 @@ public class PicReposity implements PicService {
     }
 
     @Override
-    public Observable<BaseResponse<List<PicModel>>> getPics(@Field("goodsId") String goodsId) {
+    public Observable<BaseResponse<List<PicResponse>>> getPics(@Field("goodsId") String goodsId) {
         return source.getPics(goodsId);
     }
 }

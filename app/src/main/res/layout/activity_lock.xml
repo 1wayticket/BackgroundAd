@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/start_page"
+    tools:context="test.quzubuluo.com.app.lock.LockActivity">
+
+    <TextView
+        android:id="@+id/tv_unlock"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="120dp"
+        android:background="#11ff22"
+        android:gravity="center"
+        android:text="解锁"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_more_ad"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:background="#bb33dd"
+        android:gravity="center"
+        android:text="看广告"
+        android:textColor="#ffff"
+        android:textSize="16sp" />
+</RelativeLayout>

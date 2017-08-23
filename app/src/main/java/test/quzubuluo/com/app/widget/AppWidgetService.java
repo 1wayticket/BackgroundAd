@@ -1,14 +1,10 @@
 package test.quzubuluo.com.app.widget;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
@@ -22,12 +18,11 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import test.quzubuluo.com.app.App;
-import test.quzubuluo.com.app.model.PicModel;
+import test.quzubuluo.com.app.model.PicResponse;
 import test.quzubuluo.com.app.module.BaseResponse;
 import test.quzubuluo.com.app.module.PicReposity;
 import test.quzubuluo.com.app.net.BaseObserver;
 import test.quzubuluo.com.app.net.RxSchedulers;
-import test.quzubuluo.com.app.utils.LogUtil;
 
 /*
  * @author : skywang <wangkuiwu@gmail.com>
@@ -53,15 +48,15 @@ public class AppWidgetService extends Service {
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
         PicReposity.getInstance().getPics("15")
-                .compose(RxSchedulers.<BaseResponse<List<PicModel>>>io_main())
-                .subscribe(new BaseObserver<BaseResponse<List<PicModel>>>() {
+                .compose(RxSchedulers.<BaseResponse<List<PicResponse>>>io_main())
+                .subscribe(new BaseObserver<BaseResponse<List<PicResponse>>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(BaseResponse<List<PicModel>> value) {
+                    public void onNext(BaseResponse<List<PicResponse>> value) {
                         if (value.getResult() == 0) {
                             int size = value.getData().size();
                             Random random = new Random();

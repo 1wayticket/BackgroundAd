@@ -4,7 +4,7 @@ package test.quzubuluo.com.app.model;
  * Created by Administrator on 2017/8/17.
  */
 
-public class PicModel {
+public class PicResponse {
 
     /**
      * goodsId : 15

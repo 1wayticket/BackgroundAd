@@ -25,6 +25,7 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import test.quzubuluo.com.app.App;
 import test.quzubuluo.com.app.R;
+import test.quzubuluo.com.app.SplashActivity;
 import test.quzubuluo.com.app.net.RxSchedulers;
 import test.quzubuluo.com.app.utils.LogUtil;
 
@@ -34,9 +35,8 @@ import test.quzubuluo.com.app.utils.LogUtil;
 
 public class QuzuWidget extends AppWidgetProvider {
     private static final String ACTION_REFESH = "android.appwidget.action.ACTION_REFRESH";
+    private static final String ACTION_ENTER = "android.appwidget.action.ACTION_ENTER";
     public static final String ACTION_SHOW = "android.appwidget.action.ACTION_SHOW";
-    private int[] ids = new int[]{R.drawable.ad1, R.drawable.ad2, R.drawable.ad3};
-    private static int sPosition = 0;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -44,12 +44,16 @@ public class QuzuWidget extends AppWidgetProvider {
         ComponentName provider = new ComponentName(context, QuzuWidget.class);
         switch (intent.getAction()) {
             case ACTION_SHOW:
-                LogUtil.d("chen");
+                LogUtil.d("chen show");
                 switchImage(context, manager.getAppWidgetIds(provider), manager, App.getBitmap());
                 break;
             case ACTION_REFESH:
                 AppWidgetManager appWidgetManager = manager;
                 onUpdate(context, appWidgetManager, appWidgetManager.getAppWidgetIds(provider));
+                break;
+            case ACTION_ENTER:
+                LogUtil.d("enter");
+                context.startActivity(new Intent(context, SplashActivity.class));
                 break;
             default:
                 super.onReceive(context, intent);
@@ -58,8 +62,6 @@ public class QuzuWidget extends AppWidgetProvider {
     }
 
     private void switchImage(final Context context, final int[] appWidgetIds, final AppWidgetManager appWidgetManager, Bitmap bitmap) {
-        sPosition++;
-        sPosition = sPosition % 3;
         int length = appWidgetIds.length;
         for (int i = 0; i < length; i++) {
             final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_quzu);
@@ -71,9 +73,7 @@ public class QuzuWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
-        LogUtil.d("onUpdate" + sPosition);
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), ids[sPosition]);
-//        switchImage(context, appWidgetIds, appWidgetManager,bitmap);
+        LogUtil.d("onUpdate");
         context.startService(new Intent(context, AppWidgetService.class));
     }
 
@@ -81,11 +81,14 @@ public class QuzuWidget extends AppWidgetProvider {
         int length = appWidgetIds.length;
         for (int i = 0; i < length; i++) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_quzu);
-            Intent refrehsIntent = new Intent();
-            refrehsIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
-            refrehsIntent.setAction(ACTION_REFESH);
-            PendingIntent refreshIntent = PendingIntent.getBroadcast(context, 0, refrehsIntent, 0);
-            remoteViews.setOnClickPendingIntent(R.id.tv_refresh, refreshIntent);
+            Intent refreshIntent = new Intent();
+            refreshIntent.setAction(ACTION_REFESH);
+            PendingIntent pRefreshIntent = PendingIntent.getBroadcast(context, 0, refreshIntent, 0);
+            remoteViews.setOnClickPendingIntent(R.id.tv_refresh, pRefreshIntent);
+
+            Intent enterIntent = new Intent(context, SplashActivity.class);
+            PendingIntent pEnterIntent = PendingIntent.getActivity(context, 0, enterIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+            remoteViews.setOnClickPendingIntent(R.id.iv_ad, pEnterIntent);
             appWidgetManager.updateAppWidget(appWidgetIds[i], remoteViews);
         }
     }
@@ -108,7 +111,6 @@ public class QuzuWidget extends AppWidgetProvider {
         LogUtil.d("onEnabled");
         AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
         addClickIntent(context, widgetManager, widgetManager.getAppWidgetIds(new ComponentName(context, QuzuWidget.class)));
-        sPosition = 0;
     }
 
     @Override
