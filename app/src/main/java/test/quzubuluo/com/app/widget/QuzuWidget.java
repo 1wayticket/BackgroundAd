@@ -35,7 +35,6 @@ import test.quzubuluo.com.app.utils.LogUtil;
 
 public class QuzuWidget extends AppWidgetProvider {
     private static final String ACTION_REFESH = "android.appwidget.action.ACTION_REFRESH";
-    private static final String ACTION_ENTER = "android.appwidget.action.ACTION_ENTER";
     public static final String ACTION_SHOW = "android.appwidget.action.ACTION_SHOW";
 
     @Override
@@ -50,10 +49,6 @@ public class QuzuWidget extends AppWidgetProvider {
             case ACTION_REFESH:
                 AppWidgetManager appWidgetManager = manager;
                 onUpdate(context, appWidgetManager, appWidgetManager.getAppWidgetIds(provider));
-                break;
-            case ACTION_ENTER:
-                LogUtil.d("enter");
-                context.startActivity(new Intent(context, SplashActivity.class));
                 break;
             default:
                 super.onReceive(context, intent);

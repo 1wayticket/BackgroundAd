@@ -25,7 +25,7 @@ import test.quzubuluo.com.app.net.BaseObserver;
 import test.quzubuluo.com.app.net.RxSchedulers;
 
 /*
- * @author : skywang <wangkuiwu@gmail.com>
+ * @author : Teemo
  * description : 周期性更新AppWidget的服务
  */
 

@@ -45,7 +45,7 @@ public class LockService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         LogUtil.d("onStartCommand");
-        return START_STICKY;
+        return START_REDELIVER_INTENT;
     }
 
     @Override
@@ -71,6 +71,10 @@ public class LockService extends Service {
                 Intent lockIntent = new Intent(LockService.this, LockActivity.class);
                 lockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(lockIntent);
+            } else if (action.equals("android.intent.action.BOOT_COMPLETED")) {
+                LogUtil.d("开机启动");
+                Intent service = new Intent(context, LockService.class);
+                startService(service);
             }
         }
     }
