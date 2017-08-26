@@ -4,6 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="test.quzubuluo.com.app.SplashActivity">
+    tools:context="com.quzubuluo.quzulock.app.SplashActivity">
 
 </LinearLayout>

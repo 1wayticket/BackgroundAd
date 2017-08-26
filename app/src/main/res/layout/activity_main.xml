@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="test.quzubuluo.com.app.MainActivity">
+    tools:context="com.quzubuluo.quzulock.app.MainActivity">
 
     `
 

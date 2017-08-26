@@ -8,8 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="fullscreen" parent="AppTheme">
+    <style name="FullStyle" parent="AppTheme">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@drawable/start_page</item>
+    </style>
+
+    <style name="LockStyle" parent="AppTheme">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 </resources>
