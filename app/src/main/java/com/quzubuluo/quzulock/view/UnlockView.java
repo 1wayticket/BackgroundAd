@@ -2,11 +2,14 @@ package com.quzubuluo.quzulock.view;
 
 import android.content.Context;
 import android.graphics.Point;
-import android.nfc.NdefRecord;
-import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.quzubuluo.quzulock.lock.IUnlock;
@@ -22,12 +25,12 @@ import com.quzubuluo.quzulock.utils.LogUtil;
 
 public class UnlockView extends RelativeLayout {
     private Context context;
-    private float mSensitivity = 1.0f;//ViewDragHelper的敏感度
-    private ViewDragHelper mDragHelper;
     private View captureView;
-    private Point captureViewPoints = new Point();
-    private int MAX_SLIDE_DISTANCE = 180;//解锁所需的最大滑动距离 单位:dp
+    private int MAX_SLIDE_DISTANCE = 150;//解锁所需的最大滑动距离 单位:dp
     private IUnlock iUnlock;
+    private int distance;
+    private float rawY;
+    private TranslateAnimation animation;
 
     public UnlockView(Context context) {
         this(context, null);
@@ -49,68 +52,77 @@ public class UnlockView extends RelativeLayout {
     }
 
     private void initView() {
-        mDragHelper = ViewDragHelper.create(this, mSensitivity, new ViewDragHelper.Callback() {
-            @Override
-            public boolean tryCaptureView(View child, int pointerId) {
-                if (captureView == child) {
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public int clampViewPositionHorizontal(View child, int left, int dx) {
-                return 0;
-//                return left;
-            }
-
-            @Override
-            public int clampViewPositionVertical(View child, int top, int dy) {
-                return top;
-            }
-
-            @Override
-            public void onViewReleased(View releasedChild, float xvel, float yvel) {
-                if (releasedChild == captureView) {
-                    if (DensityUtils.px2dip(context, captureViewPoints.y - captureView.getTop()) > MAX_SLIDE_DISTANCE) {
-                        unlock();
-                    } else {
-                        mDragHelper.settleCapturedViewAt(captureViewPoints.x, captureViewPoints.y);
-                        invalidate();
-                    }
-                }
-                super.onViewReleased(releasedChild, xvel, yvel);
-            }
-        });
-    }
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
-        return mDragHelper.shouldInterceptTouchEvent(event);
+        rawY = 0;
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-        captureViewPoints.x = captureView.getLeft();
-        captureViewPoints.y = captureView.getTop();
     }
 
+    private void startAnim(final int distance) {
+        animation = new TranslateAnimation(0, 0, 0, distance);
+        animation.setDuration(200);
+        animation.setInterpolator(new DecelerateInterpolator());
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                captureView.scrollTo(0, 0);
+                captureView.setAlpha(1f);
+                captureView.startAnimation(new TranslateAnimation(0, 0, 0, 0));
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        captureView.startAnimation(animation);
+    }
+
+
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        mDragHelper.processTouchEvent(event);
-        return true;
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                rawY = event.getRawY();
+                distance = 0;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                float moveRawY = event.getRawY();
+                if (event.getHistorySize() > 0) {
+                    if (Math.abs(event.getHistoricalX(0) - event.getRawX()) * 2 > Math.abs(event.getHistoricalY(0) - event.getRawY())) {
+                        break;
+                    }
+                }
+                distance = (int) ((rawY - moveRawY) * event.getYPrecision());
+                captureView.scrollTo(0, distance);
+                float mAlpha = 1f - distance * 1.0f / DensityUtils.dip2px(context, MAX_SLIDE_DISTANCE);
+                if (mAlpha >= 0 && mAlpha <= 1) {
+                    captureView.setAlpha(mAlpha);
+                }
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                rawY = 0;
+                break;
+            case MotionEvent.ACTION_UP:
+                if (DensityUtils.px2dip(context, distance) > MAX_SLIDE_DISTANCE) {
+                    unlock();
+                } else {
+                    startAnim(distance);
+                }
+                break;
+        }
+        return super.dispatchTouchEvent(event);
     }
 
     private void unlock() {
         iUnlock.unLock();
-    }
-
-    @Override
-    public void computeScroll() {
-        if (mDragHelper.continueSettling(true)) {
-            invalidate();
-        }
     }
 
 }

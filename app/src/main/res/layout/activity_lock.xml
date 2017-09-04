@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.quzubuluo.quzulock.view.UnlockView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rv_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/start_page"
     tools:context="com.quzubuluo.quzulock.lock.LockActivity">
+
+    <cn.bingoogolapple.bgabanner.BGABanner
+        android:id="@+id/banner_ad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:banner_pointAutoPlayAble="false"
+        app:banner_pointContainerBackground="@color/transparent"
+        app:banner_pointContainerLeftRightPadding="5dp"
+        app:banner_pointDrawable="@drawable/rent_banner_selector"
+        app:banner_pointTopBottomMargin="10dp"></cn.bingoogolapple.bgabanner.BGABanner>
 
     <TextView
         android:id="@+id/tv_unlock_tip"
@@ -18,13 +28,12 @@
 
     <ImageView
         android:id="@+id/iv_unlock"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="400dp"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:paddingBottom="30dp"
-        android:scaleType="centerInside"
+        android:layout_marginBottom="30dp"
+        android:scaleType="fitEnd"
         android:src="@drawable/arrow_down" />
 
 </com.quzubuluo.quzulock.view.UnlockView>
